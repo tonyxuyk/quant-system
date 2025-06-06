@@ -1,0 +1,5 @@
+# 忽略缓存和日志文件
+__pycache__/
+*.pyc
+*.log
+.DS_Store
