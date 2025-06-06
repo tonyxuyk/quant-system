@@ -1,0 +1,75 @@
+2025-06-05 16:38:59,772 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 16:38:59,774 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 16:38:59,774 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 16:38:59,774 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 16:39:00,699 - DataProcessor - INFO - 数据处理完成，耗时 0.93 秒
+2025-06-05 16:46:43,348 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 16:46:43,354 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 16:46:43,354 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 16:46:43,354 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 16:46:43,939 - DataProcessor - INFO - 数据处理完成，耗时 0.59 秒
+2025-06-05 16:48:38,933 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 16:48:38,937 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 16:48:38,937 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 16:48:38,937 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 16:48:39,541 - DataProcessor - INFO - 数据处理完成，耗时 0.61 秒
+2025-06-05 16:52:29,065 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 16:52:29,066 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 16:52:29,067 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 16:52:29,067 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 16:52:29,618 - DataProcessor - INFO - 数据处理完成，耗时 0.55 秒
+2025-06-05 16:55:34,780 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 16:55:34,783 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 16:55:34,784 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 16:55:34,784 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 16:55:35,325 - DataProcessor - INFO - 数据处理完成，耗时 0.54 秒
+2025-06-05 17:13:31,475 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:13:31,480 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:13:31,480 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:13:31,481 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:13:32,055 - DataProcessor - INFO - 数据处理完成，耗时 0.58 秒
+2025-06-05 17:16:37,490 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:16:37,491 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:16:37,491 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:16:37,491 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:16:38,023 - DataProcessor - INFO - 数据处理完成，耗时 0.53 秒
+2025-06-05 17:27:53,383 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:27:53,388 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:27:53,388 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:27:53,389 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:27:54,346 - DataProcessor - INFO - 数据处理完成，耗时 0.96 秒
+2025-06-05 17:32:37,753 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:32:37,757 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:32:37,758 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:32:37,758 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:32:38,694 - DataProcessor - INFO - 数据处理完成，耗时 0.94 秒
+2025-06-05 17:34:20,327 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:34:20,329 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:34:20,329 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:34:20,329 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:34:21,307 - DataProcessor - INFO - 数据处理完成，耗时 0.98 秒
+2025-06-05 17:35:13,981 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:35:13,983 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:35:13,983 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:35:13,983 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:35:14,957 - DataProcessor - INFO - 数据处理完成，耗时 0.97 秒
+2025-06-05 17:35:48,555 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:35:48,556 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:35:48,557 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:35:48,557 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:35:49,541 - DataProcessor - INFO - 数据处理完成，耗时 0.99 秒
+2025-06-05 17:36:50,488 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:36:50,491 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:36:50,491 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:36:50,491 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:36:51,478 - DataProcessor - INFO - 数据处理完成，耗时 0.99 秒
+2025-06-05 17:37:12,095 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:37:12,097 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:37:12,097 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:37:12,097 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:37:13,197 - DataProcessor - INFO - 数据处理完成，耗时 1.10 秒
+2025-06-05 17:39:36,050 - DataProcessor - INFO - DataProcessor initialized with chunk_size=5000, max_workers=4
+2025-06-05 17:39:36,054 - DataProcessor - INFO - 开始处理数据，应用指标: sma5, sma10
+2025-06-05 17:39:36,055 - DataProcessor - INFO - 启用并行处理 (4 workers)
+2025-06-05 17:39:36,055 - DataProcessor - INFO - 将数据分成 2 个块进行并行处理
+2025-06-05 17:39:37,029 - DataProcessor - INFO - 数据处理完成，耗时 0.98 秒
