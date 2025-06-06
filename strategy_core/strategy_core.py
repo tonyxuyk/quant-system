@@ -130,7 +130,7 @@ class MovingAverageCrossStrategy(TradingStrategy):
         ma_fast = data['close'].rolling(self.fast).mean()
         ma_slow = data['close'].rolling(self.slow).mean()
         signal = (ma_fast > ma_slow).astype(int)
-        return signal.diff().fillna(0).map({1: 'BUY', -1: 'SELL', 0: 'HOLD'})
+        return signal.diff().fillna(0)  # 返回数值: 1=买入, -1=卖出, 0=持有
     def get_parameters(self):
         return {'fast': self.fast, 'slow': self.slow}
 
@@ -146,7 +146,7 @@ class MACDStrategy(TradingStrategy):
         macd = ema_fast - ema_slow
         macd_signal = macd.ewm(span=self.signal, adjust=False).mean()
         signal = (macd > macd_signal).astype(int)
-        return signal.diff().fillna(0).map({1: 'BUY', -1: 'SELL', 0: 'HOLD'})
+        return signal.diff().fillna(0)  # 返回数值: 1=买入, -1=卖出, 0=持有
     def get_parameters(self):
         return {'fast': self.fast, 'slow': self.slow, 'signal': self.signal}
 
@@ -156,7 +156,7 @@ class MomentumBreakoutStrategy(TradingStrategy):
     def generate_signal(self, data: pd.DataFrame) -> pd.Series:
         high = data['high'].rolling(self.window).max()
         signal = (data['close'] > high.shift(1)).astype(int)
-        return signal.diff().fillna(0).map({1: 'BUY', -1: 'SELL', 0: 'HOLD'})
+        return signal.diff().fillna(0)  # 返回数值: 1=买入, -1=卖出, 0=持有
     def get_parameters(self):
         return {'window': self.window}
 
@@ -172,9 +172,9 @@ class RSIStrategy(TradingStrategy):
         loss = -delta.where(delta < 0, 0).rolling(self.period).mean()
         rs = gain / (loss + 1e-8)
         rsi = 100 - (100 / (1 + rs))
-        signal = pd.Series('HOLD', index=data.index)
-        signal[rsi > self.overbought] = 'SELL'
-        signal[rsi < self.oversold] = 'BUY'
+        signal = pd.Series(0, index=data.index)  # 0=持有
+        signal[rsi > self.overbought] = -1  # -1=卖出
+        signal[rsi < self.oversold] = 1     # 1=买入
         return signal
     def get_parameters(self):
         return {'period': self.period, 'overbought': self.overbought, 'oversold': self.oversold}
@@ -188,9 +188,9 @@ class BollingerBandsStrategy(TradingStrategy):
         std = data['close'].rolling(self.window).std()
         upper = ma + self.num_std * std
         lower = ma - self.num_std * std
-        signal = pd.Series('HOLD', index=data.index)
-        signal[data['close'] > upper] = 'SELL'
-        signal[data['close'] < lower] = 'BUY'
+        signal = pd.Series(0, index=data.index)  # 0=持有
+        signal[data['close'] > upper] = -1  # -1=卖出
+        signal[data['close'] < lower] = 1   # 1=买入
         return signal
     def get_parameters(self):
         return {'window': self.window, 'num_std': self.num_std}
