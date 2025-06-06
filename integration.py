@@ -20,7 +20,7 @@ try:
     from data_engine.data_fetcher import MultiMarketDataFetcher
     from data_engine.data_process import DataProcessor
     from data_engine.data_cache import DataCache
-    from data_engine.feature_engineering import FeatureEngineering
+    from data_engine.feature_engineering import FeatureEngineer
     
     from strategy_core.stock_selector import StockSelector
     from strategy_core.trade_executor import TradeExecutor
@@ -32,14 +32,15 @@ try:
     from strategy_core.parameter_optimizer import ParameterOptimizer
     
     from ml_integration.ml.ml_optimizer import MLOptimizer
-    from ml_integration.ml.model_training import ModelTraining
+    from ml_integration.ml.model_training import ModelTrainer
     from ml_integration.ml.model_evaluation import ModelEvaluation
-    from ml_integration.ml.timeseries_feature_engineering import TimeSeriesFeatureEngineering
+    from ml_integration.ml.timeseries_feature_engineering import TimeSeriesFeatureEngineer
     
     MODULES_LOADED = True
+    print("✅ 所有模块导入成功 - 使用真实数据模式")
 except ImportError as e:
-    print(f"导入模块失败: {e}")
-    print("使用模拟模式运行")
+    print(f"❌ 导入模块失败: {e}")
+    print("请检查模块路径和依赖包安装")
     MODULES_LOADED = False
 
 # 配置日志
@@ -53,62 +54,65 @@ logging.basicConfig(
 )
 
 class DataEngine:
-    """数据引擎集成类"""
+    """数据引擎集成类 - 只使用真实数据"""
     
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        if MODULES_LOADED:
-            try:
-                self.data_fetcher = MultiMarketDataFetcher()
-                self.data_processor = DataProcessor()
-                self.data_cache = DataCache()
-                self.feature_engineering = FeatureEngineering()
-                self.logger.info("数据引擎初始化成功 - 真实模式")
-            except Exception as e:
-                self.logger.warning(f"真实模块初始化失败，使用模拟模式: {e}")
-                self.data_fetcher = None
-        else:
-            self.data_fetcher = None
-            self.logger.info("数据引擎初始化成功 - 模拟模式")
+        if not MODULES_LOADED:
+            raise ImportError("❌ 无法导入必要模块，请检查模块路径和依赖包安装")
+        
+        try:
+            self.data_fetcher = MultiMarketDataFetcher()
+            self.data_processor = DataProcessor()
+            self.data_cache = DataCache()
+            self.feature_engineering = FeatureEngineer()
+            self.logger.info("✅ 数据引擎初始化成功 - 真实数据模式")
+        except Exception as e:
+            self.logger.error(f"❌ 数据引擎初始化失败: {e}")
+            raise e
     
     def get_data_pipeline(self, symbol: str, start_date: str, end_date: str) -> Dict[str, Any]:
-        """完整数据处理流水线"""
+        """完整数据处理流水线 - 只使用真实数据"""
         try:
-            if self.data_fetcher and MODULES_LOADED:
-                # 使用真实数据获取
-                return self._get_real_data_pipeline(symbol, start_date, end_date)
-            else:
-                # 使用模拟数据
-                return self._get_mock_data_pipeline(symbol, start_date, end_date)
+            self.logger.info(f"🔍 获取真实股票数据: {symbol}")
+            return self._get_real_data_pipeline(symbol, start_date, end_date)
                 
         except Exception as e:
-            self.logger.error(f"数据流水线执行失败: {e}")
-            # 如果真实数据获取失败，降级到模拟数据
-            return self._get_mock_data_pipeline(symbol, start_date, end_date)
+            self.logger.error(f"❌ 数据获取失败: {e}")
+            return {'status': 'error', 'message': f'数据获取失败: {str(e)}'}
     
     def _get_real_data_pipeline(self, symbol: str, start_date: str, end_date: str) -> Dict[str, Any]:
         """使用真实模块获取数据"""
         try:
             # 判断市场类型
             market = self._determine_market(symbol)
+            self.logger.info(f"📊 市场类型判断: {symbol} -> {market}")
             
             # 获取真实数据
-            self.logger.info(f"获取真实数据: {symbol} ({market})")
+            self.logger.info(f"📈 开始获取真实数据: {symbol} ({market}) 从 {start_date} 到 {end_date}")
             raw_data = self.data_fetcher.get_data_with_fallback(
                 symbol=symbol,
                 market=market,
+                freq='daily',
+                adj='qfq',
                 start_date=start_date,
                 end_date=end_date
             )
             
             if raw_data is None or raw_data.empty:
-                raise ValueError("获取到的数据为空")
+                raise ValueError(f"获取到的数据为空: {symbol}")
+            
+            self.logger.info(f"✅ 原始数据获取成功: {len(raw_data)} 条记录")
             
             # 数据预处理
-            processed_data = self.data_processor.clean_data(raw_data)
+            self.logger.info("🔧 开始数据预处理...")
+            processed_data = self._process_data(raw_data)
             
             # 特征工程
-            features = self.feature_engineering.create_features(processed_data)
+            self.logger.info("⚙️ 开始特征工程...")
+            features = self._create_features(processed_data)
+            
+            self.logger.info("✅ 数据处理流水线完成")
             
             return {
                 'raw_data': raw_data,
@@ -116,54 +120,98 @@ class DataEngine:
                 'features': features,
                 'ts_features': features,
                 'status': 'success',
-                'source': 'real'
+                'source': 'real',
+                'symbol': symbol,
+                'market': market,
+                'records_count': len(processed_data)
             }
             
         except Exception as e:
-            self.logger.error(f"真实数据获取失败: {e}")
+            self.logger.error(f"❌ 真实数据获取失败: {e}")
             raise e
     
-    def _get_mock_data_pipeline(self, symbol: str, start_date: str, end_date: str) -> Dict[str, Any]:
-        """使用模拟数据"""
-        self.logger.info(f"使用模拟数据: {symbol}")
-        
-        dates = pd.date_range(start_date, end_date, freq='D')
-        n_days = len(dates)
-        
-        # 为不同股票生成不同的模拟数据
-        seed = hash(symbol) % 10000
-        np.random.seed(seed)
-        
-        # 生成更真实的价格数据
-        base_price = np.random.uniform(50, 500)
-        returns = np.random.normal(0.001, 0.02, n_days)
-        prices = base_price * np.cumprod(1 + returns)
-        
-        processed_data = pd.DataFrame({
-            'date': dates,
-            'open': prices * (1 + np.random.normal(0, 0.005, n_days)),
-            'high': prices * (1 + np.abs(np.random.normal(0, 0.015, n_days))),
-            'low': prices * (1 - np.abs(np.random.normal(0, 0.015, n_days))),
-            'close': prices,
-            'volume': np.random.randint(1000000, 10000000, n_days)
-        })
-        
-        # 生成技术指标特征
-        features = pd.DataFrame({
-            'ma_5': processed_data['close'].rolling(5).mean(),
-            'ma_20': processed_data['close'].rolling(20).mean(),
-            'rsi': self._calculate_rsi(processed_data['close']),
-            'macd': self._calculate_macd(processed_data['close'])
-        })
-        
-        return {
-            'raw_data': processed_data,
-            'processed_data': processed_data,
-            'features': features,
-            'ts_features': features,
-            'status': 'success',
-            'source': 'mock'
-        }
+    def _process_data(self, raw_data: pd.DataFrame) -> pd.DataFrame:
+        """数据预处理"""
+        try:
+            # 调用真实的数据处理器
+            if hasattr(self.data_processor, 'clean_data'):
+                return self.data_processor.clean_data(raw_data)
+            else:
+                # 如果没有clean_data方法，进行基础处理
+                processed_data = raw_data.copy()
+                
+                # 统一列名
+                column_mapping = {
+                    '日期': 'date',
+                    '开盘': 'open',
+                    '最高': 'high', 
+                    '最低': 'low',
+                    '收盘': 'close',
+                    '成交量': 'volume'
+                }
+                
+                for old_col, new_col in column_mapping.items():
+                    if old_col in processed_data.columns:
+                        processed_data = processed_data.rename(columns={old_col: new_col})
+                
+                # 确保日期索引
+                if 'date' in processed_data.columns:
+                    processed_data['date'] = pd.to_datetime(processed_data['date'])
+                    processed_data = processed_data.set_index('date')
+                
+                # 删除缺失值
+                processed_data = processed_data.dropna()
+                
+                return processed_data
+                
+        except Exception as e:
+            self.logger.error(f"数据预处理失败: {e}")
+            # 返回原始数据
+            return raw_data
+    
+    def _create_features(self, processed_data: pd.DataFrame) -> pd.DataFrame:
+        """特征工程"""
+        try:
+            # 调用真实的特征工程器
+            if hasattr(self.feature_engineering, 'create_features'):
+                return self.feature_engineering.create_features(processed_data)
+            else:
+                # 如果没有create_features方法，创建基础技术指标
+                features = pd.DataFrame(index=processed_data.index)
+                
+                # 移动平均线
+                features['ma_5'] = processed_data['close'].rolling(5).mean()
+                features['ma_20'] = processed_data['close'].rolling(20).mean()
+                features['ma_60'] = processed_data['close'].rolling(60).mean()
+                
+                # RSI
+                features['rsi'] = self._calculate_rsi(processed_data['close'])
+                
+                # MACD
+                features['macd'] = self._calculate_macd(processed_data['close'])
+                
+                # 布林带
+                ma20 = processed_data['close'].rolling(20).mean()
+                std20 = processed_data['close'].rolling(20).std()
+                features['bb_upper'] = ma20 + 2 * std20
+                features['bb_lower'] = ma20 - 2 * std20
+                features['bb_width'] = features['bb_upper'] - features['bb_lower']
+                
+                # 成交量指标
+                features['volume_ma'] = processed_data['volume'].rolling(20).mean()
+                features['volume_ratio'] = processed_data['volume'] / features['volume_ma']
+                
+                return features
+                
+        except Exception as e:
+            self.logger.error(f"特征工程失败: {e}")
+            # 返回基础特征
+            features = pd.DataFrame(index=processed_data.index)
+            features['ma_5'] = processed_data['close'].rolling(5).mean()
+            features['ma_20'] = processed_data['close'].rolling(20).mean()
+            return features
+    
+
     
     def _determine_market(self, symbol: str) -> str:
         """判断股票所属市场"""

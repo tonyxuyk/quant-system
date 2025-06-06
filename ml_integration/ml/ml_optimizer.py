@@ -4,10 +4,17 @@ from typing import List, Dict, Any, Callable, Optional, Union
 from sklearn.model_selection import TimeSeriesSplit, ParameterGrid
 from sklearn.metrics import accuracy_score, make_scorer
 import matplotlib.pyplot as plt
-import mlflow
-import mlflow.sklearn
 import warnings
 warnings.filterwarnings('ignore')
+
+# 可选导入mlflow
+try:
+    import mlflow
+    import mlflow.sklearn
+    MLFLOW_AVAILABLE = True
+except ImportError:
+    MLFLOW_AVAILABLE = False
+    print("警告: mlflow未安装，将跳过实验跟踪功能")
 
 try:
     import lightgbm as lgb
@@ -54,7 +61,8 @@ class MLOptimizer:
         self._check_model_dependencies(model_type)
         self.model_type = model_type
         self.mlflow_experiment = mlflow_experiment
-        mlflow.set_experiment(mlflow_experiment)
+        if MLFLOW_AVAILABLE:
+            mlflow.set_experiment(mlflow_experiment)
         self.model = None
         self.best_params = None
         self.optimization_history: List[Dict[str, Any]] = []
@@ -143,9 +151,10 @@ class MLOptimizer:
         self.best_params = best_params
         self.optimization_history = history
         # mlflow记录
-        with mlflow.start_run():
-            mlflow.log_params(best_params)
-            mlflow.log_metric('best_score', best_score)
+        if MLFLOW_AVAILABLE:
+            with mlflow.start_run():
+                mlflow.log_params(best_params)
+                mlflow.log_metric('best_score', best_score)
         return best_params, best_score, history
 
     def plot_optimization_history(self, metric_name: str = 'score'):
@@ -167,8 +176,9 @@ class MLOptimizer:
         self.model = self._get_model(params)
         self.model.fit(X, y)
         # mlflow保存模型
-        with mlflow.start_run():
-            mlflow.sklearn.log_model(self.model, 'model')
+        if MLFLOW_AVAILABLE:
+            with mlflow.start_run():
+                mlflow.sklearn.log_model(self.model, 'model')
 
     def predict(self, X: pd.DataFrame, threshold: float = 0.5, multi_signal: bool = False) -> pd.Series:
         proba = self.model.predict_proba(X)[:, 1]
@@ -191,4 +201,6 @@ class MLOptimizer:
         return thresholds[np.argmax(scores)]
 
     def get_mlflow_model(self, run_id: str):
+        if not MLFLOW_AVAILABLE:
+            raise ImportError("MLflow not available")
         return mlflow.sklearn.load_model(f'runs:/{run_id}/model') 

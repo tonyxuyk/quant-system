@@ -84,8 +84,53 @@ class DataFetcher:
             return None
 
     def get_tushare_data(self, symbol, freq, adj, start_date, end_date):
-        # ... existing code ...
-        pass
+        """使用Tushare获取A股数据"""
+        try:
+            import tushare as ts
+            import pandas as pd
+            
+            pro = ts.pro_api(TS_TOKEN)
+            
+            # 处理股票代码格式
+            if len(symbol) == 6 and symbol.isdigit():
+                if symbol.startswith(('00', '30')):
+                    ts_symbol = f"{symbol}.SZ"
+                elif symbol.startswith('60'):
+                    ts_symbol = f"{symbol}.SH"
+                else:
+                    ts_symbol = f"{symbol}.SZ"
+            else:
+                ts_symbol = symbol
+            
+            # 获取日线数据
+            df = pro.daily(ts_code=ts_symbol, 
+                          start_date=start_date, 
+                          end_date=end_date)
+            
+            if df is None or df.empty:
+                return None
+            
+            # 统一列名
+            df = df.rename(columns={
+                'trade_date': 'date',
+                'open': 'open',
+                'high': 'high', 
+                'low': 'low',
+                'close': 'close',
+                'vol': 'volume',
+                'amount': 'amount'
+            })
+            
+            # 处理日期格式
+            df['date'] = pd.to_datetime(df['date'])
+            df = df.set_index('date').sort_index()
+            
+            print(f"[INFO] Tushare数据获取成功: {len(df)} 条记录")
+            return df
+            
+        except Exception as e:
+            print(f"[WARN] Tushare数据获取失败: {e}")
+            return None
 
     def get_alpha_data(self, symbol, freq, interval):
         # ... existing code ...
@@ -345,8 +390,8 @@ class MultiMarketDataFetcher:
             except Exception as e:
                 print(f"[WARN] akshare失败: {e}")
                 tried.append('akshare')
-            # 2. tushare (A股和港股)
-            if market == ['A', 'HK']:
+            # 2. tushare (仅A股)
+            if market == 'A':
                 try:
                     df = self.get_tushare_data(symbol, freq[0].upper(), adj, start_date, end_date)
                     if df is not None and not df.empty:
@@ -380,54 +425,78 @@ class MultiMarketDataFetcher:
         import pandas as pd
         try:
             if market == 'A':
+                # A股数据获取
                 df = ak.stock_zh_a_hist(symbol=symbol, 
-                                  period=freq,
-                                  start_date=start_date,
-                                  end_date=end_date,
-                                  adjust=adj)
+                                      period=freq,
+                                      start_date=start_date,
+                                      end_date=end_date,
+                                      adjust=adj)
                 if df is None or df.empty:
                     return None
-                # 获取A股交易日历
-                trade_days = ak.tool_trade_date_hist_sina()
-                trade_days = pd.to_datetime(trade_days['trade_date'])
-                mask = (trade_days >= pd.to_datetime(start_date)) & (trade_days <= pd.to_datetime(end_date))
-                all_days = trade_days[mask]
-                df['日期'] = pd.to_datetime(df['日期'])
-                df = df.set_index('日期').reindex(all_days)
-                # 标记停牌日
-                df['is_suspended'] = df['open'].isna().astype(int)
-                df = df.reset_index().rename(columns={'index': '日期'})
+                
+                # 统一列名格式
+                column_mapping = {
+                    '日期': 'date',
+                    '开盘': 'open',
+                    '最高': 'high', 
+                    '最低': 'low',
+                    '收盘': 'close',
+                    '成交量': 'volume',
+                    '成交额': 'amount',
+                    '振幅': 'amplitude',
+                    '涨跌幅': 'pct_chg',
+                    '涨跌额': 'change',
+                    '换手率': 'turnover'
+                }
+                
+                for old_col, new_col in column_mapping.items():
+                    if old_col in df.columns:
+                        df = df.rename(columns={old_col: new_col})
+                
+                # 确保日期索引
+                if 'date' in df.columns:
+                    df['date'] = pd.to_datetime(df['date'])
+                    df = df.set_index('date')
+                
+                print(f"[INFO] A股数据获取成功: {len(df)} 条记录")
+                return df
+                
             elif market == 'HK':
+                # 港股数据获取
                 df = ak.stock_hk_daily(symbol=symbol)
                 if df is None or df.empty:
                     return None
-                # 兼容不同列名
+                
+                # 统一列名
                 if 'date' in df.columns:
-                    df = df.rename(columns={'date': '日期'})
-                if '日期' not in df.columns:
-                    raise ValueError("港股数据缺少日期列")
-                # 获取港股交易日历（用A股日历近似）
-                trade_days = ak.tool_trade_date_hist_sina()
-                trade_days = pd.to_datetime(trade_days['trade_date'])
-                mask = (trade_days >= pd.to_datetime(start_date)) & (trade_days <= pd.to_datetime(end_date))
-                all_days = trade_days[mask]
-                df['日期'] = pd.to_datetime(df['日期'])
-                df = df.set_index('日期').reindex(all_days)
-                df['is_suspended'] = df['open'].isna().astype(int)
-                df = df.reset_index().rename(columns={'index': '日期'})
+                    df = df.rename(columns={'date': 'date'})
+                elif '日期' in df.columns:
+                    df = df.rename(columns={'日期': 'date'})
+                
+                if 'date' in df.columns:
+                    df['date'] = pd.to_datetime(df['date'])
+                    df = df.set_index('date')
+                
+                print(f"[INFO] 港股数据获取成功: {len(df)} 条记录")
+                return df
+                
             elif market == 'US':
+                # 美股数据获取
                 df = ak.stock_us_daily(symbol=symbol)
                 if df is None or df.empty:
                     return None
+                
+                # 统一列名
                 if 'date' in df.columns:
-                    df = df.rename(columns={'date': '日期'})
-                if '日期' not in df.columns:
-                    raise ValueError("美股数据缺少日期列")
-                df['日期'] = pd.to_datetime(df['日期'])
-                df = df.set_index('日期')
+                    df['date'] = pd.to_datetime(df['date'])
+                    df = df.set_index('date')
+                
+                print(f"[INFO] 美股数据获取成功: {len(df)} 条记录")
+                return df
+                
             else:
                 raise ValueError(f"不支持的市场类型: {market}")
-            return df
+                
         except Exception as e:
-            print(f"[WARN] akshare失败: {str(e)}")
+            print(f"[WARN] akshare获取{market}数据失败: {str(e)}")
             return None
