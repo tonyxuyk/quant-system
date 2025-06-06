@@ -3,7 +3,12 @@ from dataclasses import dataclass
 from typing import Callable, Optional, List, Dict, Any, Union
 import pandas as pd
 import numpy as np
-import yaml
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+    print("警告: PyYAML未安装，YAML配置功能将不可用")
 
 @dataclass
 class MarketData:
@@ -254,6 +259,9 @@ class StrategyPortfolio:
 
 # --- YAML配置解析与组合策略示例 ---
 def load_strategies_from_yaml(yaml_path: str) -> List[TradingStrategy]:
+    if not HAS_YAML:
+        raise ImportError("PyYAML未安装，无法加载YAML配置文件")
+    
     with open(yaml_path, 'r') as f:
         config = yaml.safe_load(f)
     strategies = []
