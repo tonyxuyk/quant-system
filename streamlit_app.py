@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-QuantAI Trader - Streamlit主应用
+Tony&Associates QuantAI Trader - Streamlit主应用
 量化交易系统Web界面
 """
 
@@ -25,7 +25,7 @@ except ImportError:
 
 # 页面配置
 st.set_page_config(
-    page_title="QuantAI Trader",
+    page_title="Tony&Associates QuantAI Trader",
     layout="wide",
     page_icon="📈",
     initial_sidebar_state="expanded"
@@ -98,7 +98,7 @@ if 'results' not in st.session_state:
 def main():
     """主函数"""
     # 主标题
-    st.markdown('<h1 class="main-header">🚀 QuantAI Trader</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🚀 Tony&Associates QuantAI Trader</h1>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; font-size: 1.2rem; color: #666;">AI驱动的量化交易系统</p>', unsafe_allow_html=True)
     
     # 侧边栏导航
@@ -592,7 +592,7 @@ streamlit run streamlit_app.py
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666; padding: 20px;'>
-    <p>🚀 <strong>QuantAI Trader</strong> | 智能量化交易系统 | 
+    <p>🚀 <strong>Tony&Associates QuantAI Trader</strong> | 智能量化交易系统 | 
     <a href="https://github.com" target="_blank">GitHub</a> | 
     <a href="https://streamlit.io" target="_blank">Streamlit</a></p>
     <p style='font-size: 0.8rem;'>⚠️ 投资有风险，入市需谨慎。本系统仅用于学习和研究目的。</p>

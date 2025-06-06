@@ -1,4 +1,4 @@
-name: Deploy QuantAI Trader to Streamlit Cloud
+name: Deploy Tony&Associates QuantAI Trader to Streamlit Cloud
 
 on:
   push:

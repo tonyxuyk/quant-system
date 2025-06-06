@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-QuantAI Trader - 系统集成核心
+Tony&Associates QuantAI Trader - 系统集成核心
 整合数据引擎、策略核心、机器学习模块
 """
 
@@ -247,7 +247,7 @@ class QuantSystem:
             self.strategy_engine = StrategyEngine(self.data_engine)
             self.ml_engine = MLEngine(self.data_engine)
             
-            self.logger.info("QuantAI Trader 系统初始化成功")
+            self.logger.info("Tony&Associates QuantAI Trader 系统初始化成功")
             
         except Exception as e:
             self.logger.error(f"系统初始化失败: {e}")
@@ -386,7 +386,7 @@ def quick_backtest(symbol: str, strategy: str, days: int = 365) -> Dict[str, Any
 if __name__ == "__main__":
     # 测试系统
     system = create_quant_system()
-    print("QuantAI Trader 系统初始化成功")
+    print("Tony&Associates QuantAI Trader 系统初始化成功")
     
     # 快速测试
     test_result = quick_backtest("AAPL", "moving_average", 30)

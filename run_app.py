@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-QuantAI Trader - 应用启动脚本
+Tony&Associates QuantAI Trader - 应用启动脚本
 智能启动脚本，自动检查依赖并启动Streamlit应用
 """
 
@@ -108,7 +108,7 @@ def start_streamlit():
     app_file = Path(__file__).parent / "streamlit_app.py"
     
     try:
-        logger.info("🚀 启动QuantAI Trader...")
+        logger.info("🚀 启动Tony&Associates QuantAI Trader...")
         logger.info("📊 应用将在浏览器中自动打开...")
         logger.info("🔗 如果没有自动打开，请访问: http://localhost:8501")
         
@@ -127,7 +127,7 @@ def start_streamlit():
 
 def main():
     """主函数"""
-    print("🚀 QuantAI Trader 启动检查...")
+    print("🚀 Tony&Associates QuantAI Trader 启动检查...")
     print("=" * 50)
     
     # 检查步骤

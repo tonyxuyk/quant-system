@@ -1,4 +1,4 @@
-# 🚀 QuantAI Trader - AI驱动的量化交易系统
+# 🚀 Tony&Associates QuantAI Trader - AI驱动的量化交易系统
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/deploy)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)

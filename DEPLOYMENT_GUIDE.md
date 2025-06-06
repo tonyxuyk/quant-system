@@ -1,4 +1,4 @@
-# 🚀 QuantAI Trader 部署完整指南
+# 🚀 Tony&Associates QuantAI Trader 部署完整指南
 
 ## 📋 部署检查清单
 
@@ -360,6 +360,6 @@ logging.basicConfig(
 
 ---
 
-🎉 **恭喜！你已经成功完成了QuantAI Trader的部署。**
+🎉 **恭喜！你已经成功完成了Tony&Associates QuantAI Trader的部署。**
 
 [![Deploy to Streamlit Cloud](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/deploy) 

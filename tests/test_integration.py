@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-QuantAI Trader - 集成测试
+Tony&Associates QuantAI Trader - 集成测试
 测试系统各模块的集成功能
 """
 
