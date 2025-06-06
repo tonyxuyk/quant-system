@@ -1,155 +1,89 @@
-# Streamlit Cloud 部署指南
+# 🚀 Streamlit Cloud 部署指南
 
-## 🚀 快速部署到 Streamlit Cloud
+## Tony&Associates QuantAI Trader 部署教程
 
-### 1. 准备工作
-确保您的GitHub仓库包含以下文件：
-- ✅ `streamlit_app.py` - 主应用文件
-- ✅ `requirements.txt` - 依赖列表
-- ✅ `.streamlit/config.toml` - 配置文件
+### 第一步: 准备工作
+✅ 代码已推送到 GitHub: https://github.com/tonyxuyk/quant-system
 
-### 2. 部署步骤
-
-#### 步骤1: 访问 Streamlit Cloud
+### 第二步: 访问 Streamlit Cloud
 1. 打开 [share.streamlit.io](https://share.streamlit.io)
-2. 使用GitHub账号登录
+2. 使用 GitHub 账号登录
 
-#### 步骤2: 创建新应用
-1. 点击 "New app"
-2. 选择 "From existing repo"
-3. 填写仓库信息：
-   - **Repository**: `tonyxuyk/quant-system`
-   - **Branch**: `main`
-   - **Main file path**: `streamlit_app.py`
+### 第三步: 部署应用
+1. 点击 "New app" 按钮
+2. 选择 GitHub 仓库: `tonyxuyk/quant-system`
+3. 分支选择: `main`
+4. 主文件路径: `streamlit_app.py`
+5. 应用 URL: 自定义或使用默认
 
-#### 步骤3: 高级设置（可选）
-```
-Python version: 3.11
-```
+### 第四步: 配置环境变量（可选）
+在 Streamlit Cloud 应用设置中添加：
+```toml
+[general]
+environment = "production"
+debug = false
 
-#### 步骤4: 部署
-1. 点击 "Deploy!"
-2. 等待部署完成（通常需要2-5分钟）
+[akshare]
+# akshare 不需要API密钥
 
-### 3. 依赖说明
-
-当前 `requirements.txt` 包含：
-```
-streamlit>=1.28.0
-pandas>=2.0.0
-numpy>=1.24.0
-plotly>=5.17.0
-scikit-learn>=1.3.0
-requests>=2.31.0
-python-dateutil>=2.8.0
-pytz>=2023.3
-setuptools>=65.0.0
-PyYAML>=6.0
-akshare>=1.12.0
-tushare>=1.2.89
-matplotlib>=3.7.0
-openpyxl>=3.1.0
-lxml>=4.9.0
-beautifulsoup4>=4.12.0
+[tushare]
+token = "你的tushare令牌"
 ```
 
-### 4. 可能的问题和解决方案
+### 第五步: 部署完成
+- 部署时间约 2-5 分钟
+- 应用将自动可用于访问
+- 支持实时更新（代码推送后自动重新部署）
 
-#### 问题1: 依赖安装失败
-**解决方案**: 
-- 检查 `requirements.txt` 格式
-- 移除有问题的依赖包
-- 使用更宽松的版本要求
+## 📋 部署清单
 
-#### 问题2: 内存不足
-**解决方案**:
-- 优化数据加载
-- 使用 `@st.cache_data` 缓存
-- 减少同时加载的数据量
+### ✅ 已完成
+- [x] streamlit_app.py 应用文件
+- [x] requirements.txt 依赖配置
+- [x] runtime.txt Python版本配置
+- [x] .streamlit/config.toml 应用配置
+- [x] 错误处理和降级方案
+- [x] 演示模式支持
+- [x] 代码推送到 GitHub
 
-#### 问题3: 网络请求超时
-**解决方案**:
-- 增加请求超时时间
-- 添加重试机制
-- 使用异步请求
+### 🎯 功能特点
+- **多市场支持**: A股、港股、美股
+- **策略回测**: 5种量化策略
+- **智能选股**: 基于规则的股票筛选
+- **数据可视化**: 实时图表和技术指标
+- **机器学习**: AI价格预测（开发中）
+- **响应式设计**: 适配各种设备
 
-### 5. 本地测试
+### 🔧 技术架构
+- **前端**: Streamlit + Plotly
+- **数据源**: Akshare + Tushare
+- **后端**: Python 集成系统
+- **部署**: Streamlit Cloud
+- **版本**: Python 3.11
 
-部署前建议本地测试：
-```bash
-# 安装依赖
-pip install -r requirements.txt
+### 📱 访问方式
+部署完成后，应用将可以通过以下方式访问：
+- Streamlit Cloud 提供的 URL
+- 自定义域名（高级功能）
 
-# 启动应用
-streamlit run streamlit_app.py --server.port 8501
-```
+### 🚨 注意事项
+1. **免费版限制**:
+   - 1GB 内存限制
+   - 共享 CPU 资源
+   - 应用休眠机制
 
-### 6. 环境变量配置
+2. **数据源依赖**:
+   - akshare: 免费数据源，无需配置
+   - tushare: 需要注册账号获取token
 
-如果需要API密钥等敏感信息：
-1. 在Streamlit Cloud中设置 Secrets
-2. 在应用中使用 `st.secrets`
+3. **性能优化**:
+   - 使用 @st.cache_resource 缓存系统初始化
+   - 使用 @st.cache_data 缓存数据获取
+   - 实现降级演示模式
 
-示例：
-```python
-# 在 .streamlit/secrets.toml 中
-[api]
-tushare_token = "your_token_here"
-
-# 在代码中使用
-token = st.secrets["api"]["tushare_token"]
-```
-
-### 7. 自定义域名（可选）
-
-Streamlit Cloud提供免费子域名：
-- 格式: `https://your-app-name.streamlit.app`
-- 可以配置自定义域名（需要付费计划）
-
-### 8. 监控和日志
-
-- 在Streamlit Cloud控制台查看部署日志
-- 使用 `st.write()` 进行调试输出
-- 监控应用性能和错误
-
-### 9. 更新部署
-
-代码更新后：
-1. 推送到GitHub
-2. Streamlit Cloud会自动重新部署
-3. 也可以手动触发重新部署
-
-### 10. 故障排除
-
-#### 常见错误：
-1. **ModuleNotFoundError**: 检查 requirements.txt
-2. **Memory Error**: 优化数据处理
-3. **Timeout Error**: 检查网络请求
-
-#### 调试技巧：
-- 查看部署日志
-- 本地复现问题
-- 逐步注释代码定位问题
+### 📞 技术支持
+如有问题，请在 GitHub 仓库提交 Issue:
+https://github.com/tonyxuyk/quant-system/issues
 
 ---
-
-## 🎯 部署检查清单
-
-- [ ] GitHub仓库已更新
-- [ ] requirements.txt 包含所有依赖
-- [ ] 本地测试通过
-- [ ] 配置文件正确
-- [ ] 敏感信息已配置为 Secrets
-- [ ] 应用启动正常
-
-## 📞 支持
-
-如遇到问题：
-1. 查看 [Streamlit 文档](https://docs.streamlit.io)
-2. 检查 [Streamlit Community](https://discuss.streamlit.io)
-3. 查看应用日志进行调试
-
----
-
-**最后更新**: 2025-06-06
-**状态**: ✅ 准备就绪 
+**部署成功！** 🎉 您的量化交易系统已经可以在云端访问了。 
